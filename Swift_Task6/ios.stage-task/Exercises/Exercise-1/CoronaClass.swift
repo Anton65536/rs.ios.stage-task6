@@ -3,7 +3,7 @@ import Foundation
 class CoronaClass {
  
      var seats = [Int]()
-    let n: Int
+     let n: Int
         
      init(n: Int) {
         self.n = n

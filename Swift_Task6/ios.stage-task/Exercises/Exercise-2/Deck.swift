@@ -28,26 +28,68 @@ extension Deck {
 
     init(with type: DeckType) {
         self.type = type
+        self.cards = createDeck(suits: Suit.allCases, values: Value.allCases)
     }
 
     public func createDeck(suits:[Suit], values:[Value]) -> [Card] {
-        []
+        var createdCards: [Card] = []
+        for suit in suits {
+            for value in values {
+                createdCards.append(Card(suit: suit, value: value))
+            }
+        }
+        return createdCards
     }
 
-    public func shuffle() {
+    public mutating func shuffle() {
+        if cards.count < 1 {
+            return
+        }
+        for i in 0..<cards.count {
+            let randomNumber = Int.random(in: 0..<cards.count)
+                         let tempValue = cards[randomNumber]
+                        cards[randomNumber] = cards[i]
+                        cards[i] = tempValue
+        }
+    }
+
+    public mutating func defineTrump() {
+        guard let trumpTemp = cards.first?.suit else {return}
+        self.trump = trumpTemp
+        setTrumpCards(for: trumpTemp)
 
     }
 
-    public func defineTrump() {
+    public mutating func initialCardsDealForPlayers(players: [Player]) {
+            if players.count <= 0 && players.count > 6{return}
 
-    }
 
-    public func initialCardsDealForPlayers(players: [Player]) {
 
-    }
+            for player in players {
+                var index = 6
+                while index != 0 {
+                    if player.hand == nil{
+                        player.hand = [Card]()
+                    }
+                    player.hand?.append(cards[index])
+                    cards.removeLast()
+                    index -= 1
+                }
+            }
 
-    public func setTrumpCards(for suit:Suit) {
 
-    }
+
+        }
+
+
+        public mutating func setTrumpCards(for suit:Suit) {
+
+            for i in 0..<cards.count {
+                if cards[i].suit == suit{
+                    cards[i].isTrump = true
+                }
+
+            }
+        }
 }
 
